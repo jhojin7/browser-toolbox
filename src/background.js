@@ -24,6 +24,16 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
       if (stored[key] === undefined) missingSettings[key] = value;
     }
 
+    // Preserve a user's custom list, but migrate v0.1's untouched default.
+    if (
+      reason === "update" &&
+      Array.isArray(stored.responsiveWidthDomains) &&
+      stored.responsiveWidthDomains.length === 1 &&
+      stored.responsiveWidthDomains[0] === "*.dcinside.com"
+    ) {
+      missingSettings.responsiveWidthDomains = DEFAULT_SETTINGS.responsiveWidthDomains;
+    }
+
     if (Object.keys(missingSettings).length) {
       return chrome.storage.local.set(missingSettings);
     }
