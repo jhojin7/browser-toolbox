@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Toolbox</title>
+    <link rel="stylesheet" href="sidebar.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <h1>Personal Toolbox</h1>
+        <button
+          id="extensions-page-button"
+          class="extensions-page-button"
+          type="button"
+          title="Open this extension in Chrome Extensions"
+        >
+          Manage
+        </button>
+      </header>
+
+      <main>
+        <section aria-labelledby="ua-title">
+          <div class="section-title">
+            <h2 id="ua-title">User agent</h2>
+            <span id="status-pill" data-active="false">Default</span>
+          </div>
+          <p class="hint">Current tab: <span id="site-name">Loading…</span></p>
+
+          <label for="profile-select">Profile</label>
+          <div class="select-wrap">
+            <select id="profile-select"></select>
+          </div>
+          <p id="profile-description" class="profile-description"></p>
+          <p class="scope-note">Changes only the top-level page request.</p>
+
+          <div class="actions">
+            <button id="apply-button" class="button button--primary" type="button">
+              Apply &amp; reload
+            </button>
+            <button id="reset-button" class="button button--secondary" type="button" disabled>
+              Reset
+            </button>
+          </div>
+
+          <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+
+          <details class="details">
+            <summary>View user-agent string</summary>
+            <code id="ua-string"></code>
+          </details>
+        </section>
+
+        <section class="right-click" aria-labelledby="right-click-title">
+          <h2 id="right-click-title">Right click</h2>
+          <label class="toggle-row" for="right-click-toggle">
+            <span>
+              <strong>Allow browser context menu</strong>
+              <small>Overrides website right-click handlers.</small>
+            </span>
+            <input id="right-click-toggle" type="checkbox" />
+          </label>
+        </section>
+
+        <section class="responsive-width" aria-labelledby="responsive-width-title">
+          <h2 id="responsive-width-title">Responsive width</h2>
+          <label class="toggle-row" for="responsive-width-toggle">
+            <span>
+              <strong>Fit fixed-width layout to window</strong>
+              <small>Scales pages instead of clipping them.</small>
+            </span>
+            <input id="responsive-width-toggle" type="checkbox" />
+          </label>
+          <label class="domains-label" for="responsive-domains">Domains (one per line)</label>
+          <textarea
+            id="responsive-domains"
+            rows="4"
+            spellcheck="false"
+            placeholder="*.naver.com"
+          ></textarea>
+          <div class="responsive-actions">
+            <button id="save-responsive-domains" class="button button--secondary" type="button">
+              Save domains
+            </button>
+            <span id="responsive-feedback" class="feedback" role="status" aria-live="polite"></span>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        User-agent changes apply only to the selected tab.
+      </footer>
+    </div>
+
+    <script type="module" src="sidebar.js"></script>
+  </body>
+</html>
