@@ -1,7 +1,8 @@
 import { getProfile } from "./shared/user-agents.js";
 
 const STATE_KEY = "userAgentByTab";
-const UA_RULE_ID_OFFSET = 1_000_000_000;
+const LEGACY_UA_RULE_ID_OFFSET = 1_000_000_000;
+const MAX_DNR_RULE_ID = 2_147_483_647;
 const DEFAULT_SETTINGS = {
   allowRightClick: true,
   responsiveWidthEnabled: true,
@@ -47,13 +48,22 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
 });
 
 function ruleIdForTab(tabId) {
-  return UA_RULE_ID_OFFSET + tabId;
+  return tabId;
+}
+
+function isValidRuleId(ruleId) {
+  return Number.isInteger(ruleId) && ruleId >= 1 && ruleId <= MAX_DNR_RULE_ID;
 }
 
 function ruleIdsForTab(tabId) {
-  // Also remove v0.1's tab-id-only rule so an extension reload cannot leave
-  // its broad header override active behind the safer implementation.
-  return [ruleIdForTab(tabId), tabId];
+  // v0.2 added a large offset to tab IDs. On Chrome sessions with already-high
+  // tab IDs, that exceeded DNR's signed integer range and made Apply fail.
+  // Use Chrome's positive tab ID directly and only attempt to remove a valid
+  // legacy offset rule when one could have existed.
+  return [...new Set([
+    ruleIdForTab(tabId),
+    LEGACY_UA_RULE_ID_OFFSET + tabId
+  ].filter(isValidRuleId))];
 }
 
 async function getState() {
