@@ -77,19 +77,19 @@ function updateResponsiveWidth() {
   if (!shouldApply) {
     responsiveStyle?.remove();
     responsiveStyle = null;
-    document.documentElement.style.removeProperty("--personal-toolbox-page-scale");
+    document.documentElement.style.removeProperty("--browser-toolbox-page-scale");
     return;
   }
 
   if (!responsiveStyle) {
     responsiveStyle = document.createElement("style");
-    responsiveStyle.id = "personal-toolbox-responsive-width";
+    responsiveStyle.id = "browser-toolbox-responsive-width";
     (document.head || document.documentElement).append(responsiveStyle);
   }
 
   responsiveStyle.textContent = `
     html { overflow-x: clip !important; }
-    body { zoom: var(--personal-toolbox-page-scale, 1) !important; }
+    body { zoom: var(--browser-toolbox-page-scale, 1) !important; }
   `;
 
   scheduleResponsiveMeasurement();
@@ -111,11 +111,11 @@ function measureAndFitPageWidth() {
   const root = document.documentElement;
   // Measure at 100% before calculating the scale. Reading scrollWidth forces
   // layout, so this also works after the page changes its own fixed-width CSS.
-  root.style.setProperty("--personal-toolbox-page-scale", "1");
+  root.style.setProperty("--browser-toolbox-page-scale", "1");
   const naturalWidth = Math.max(root.scrollWidth, document.body.scrollWidth);
   const scale = Math.min(1, window.innerWidth / naturalWidth);
 
-  root.style.setProperty("--personal-toolbox-page-scale", String(scale));
+  root.style.setProperty("--browser-toolbox-page-scale", String(scale));
 }
 
 document.addEventListener("DOMContentLoaded", scheduleResponsiveMeasurement, { once: true });

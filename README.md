@@ -1,6 +1,6 @@
-# Personal Toolbox
+# browser-toolbox
 
-Personal Toolbox is a small, local-first Chrome side-panel extension for browser utilities that do not need an account or a backend.
+browser-toolbox is an opinionated, local-first collection of small Chrome side-panel tools built for personal use. It does not need an account or a backend.
 
 ## Features
 
@@ -32,7 +32,7 @@ The context-menu override is enabled by default. It runs on normal webpages and 
 
 ### Responsive width
 
-For matching domains, Personal Toolbox measures a fixed page layout and scales it down to fit the available page width. It is useful for old fixed-width websites; it does not reconstruct their internal responsive layout.
+For matching domains, browser-toolbox measures a fixed page layout and scales it down to fit the available page width. It is useful for old fixed-width websites; it does not reconstruct their internal responsive layout.
 
 ## Project layout
 
