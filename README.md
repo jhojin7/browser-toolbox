@@ -1,56 +1,41 @@
 # browser-toolbox
 
-browser-toolbox is an opinionated, local-first collection of small Chrome side-panel tools built for personal use. It does not need an account or a backend.
+A small Chrome extension I use as a personal browser toolbox. It collects tiny fixes and overrides that make everyday browsing less annoying.
 
-## Features
+No account, backend, analytics, or remote service.
 
-- Per-tab user-agent profiles for the top-level page request only
-- Right-click override for websites that suppress Chrome's context menu
-- Fixed-width layout fitting for selected domains
-- Focus redirect for distracting sites
+## Tools
 
-The extension starts with `*.naver.com` in the responsive-width domain list. Add or remove hostname patterns one per line from the sidebar.
-The focus redirect sends matching sites to `https://www.keybr.com/`. It starts with `x.com`, `youtube.com`, and `news.ycombinator.com`; add or remove domains from the sidebar.
+- **User agent**: apply a per-tab `User-Agent` header profile, then reload the tab.
+- **Right click**: keep Chrome's context menu available on sites that try to suppress it.
+- **Responsive width**: scale fixed-width pages down for selected domains. Defaults to `*.naver.com`.
+- **Focus redirect**: redirect distracting domains to `https://www.keybr.com/`. Defaults to `x.com`, `youtube.com`, and `news.ycombinator.com`.
 
 ## Install
 
 1. Open `chrome://extensions`.
 2. Enable **Developer mode**.
-3. Select **Load unpacked**.
+3. Click **Load unpacked**.
 4. Choose this repository folder.
 5. Click the extension icon to open the side panel.
 
-Reload the extension from `chrome://extensions` after source changes. Reload a matching webpage after changing responsive-width settings.
+After source changes, reload the extension from `chrome://extensions`.
 
-## Behavior and limits
+## Notes
 
-### User agent
+- Settings are stored in Chrome extension storage.
+- User-agent changes affect only the active tab's top-level page request. They do not change Client Hints, cookies, JavaScript values, device metrics, subresources, or viewport size.
+- Right-click and responsive-width features run on normal webpages and frames. Chrome extension scripts cannot run on internal pages such as `chrome://`.
+- Responsive-width domain patterns are edited one per line in the side panel. Matching tabs may need a reload.
+- Focus redirect applies to top-level page visits. A domain like `youtube.com` also matches subdomains like `www.youtube.com`.
 
-The user-agent tool changes only the `User-Agent` header on the active tab's top-level navigation request. It does not alter cookies, Client Hint headers, API calls, JavaScript values, device metrics, or the browser viewport. This narrower scope avoids broadly changing a signed-in website's browser fingerprint.
-
-### Right click
-
-The context-menu override is enabled by default. It runs on normal webpages and frames, but Chrome does not permit extensions to run on internal pages such as `chrome://`.
-
-### Responsive width
-
-For matching domains, browser-toolbox measures a fixed page layout and scales it down to fit the available page width. It is useful for old fixed-width websites; it does not reconstruct their internal responsive layout.
-
-### Focus redirect
-
-The focus redirect applies to top-level page visits only. A domain such as `youtube.com` matches `youtube.com` and subdomains such as `www.youtube.com` or `m.youtube.com`, then redirects to `https://www.keybr.com/` before the blocked page loads.
-
-## Project layout
+## Layout
 
 ```text
-assets/icons/             Extension icons
-src/features/             Modular browser-toolbox features
-src/background.js         Extension lifecycle and feature message routing
-src/shared/               Shared profile and feature setting definitions
-src/sidebar/              Side-panel UI
-manifest.json             Manifest V3 entry point
+assets/icons/      Extension icons
+src/background.js  Extension lifecycle and message routing
+src/features/      One module per browser-toolbox feature
+src/shared/        Shared profiles, defaults, and setting keys
+src/sidebar/       Side-panel UI
+manifest.json      Manifest V3 entry point
 ```
-
-## Privacy
-
-All settings stay in Chrome extension storage. The extension has no server, analytics, or external network calls.
