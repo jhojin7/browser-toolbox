@@ -7,8 +7,10 @@ browser-toolbox is an opinionated, local-first collection of small Chrome side-p
 - Per-tab user-agent profiles for the top-level page request only
 - Right-click override for websites that suppress Chrome's context menu
 - Fixed-width layout fitting for selected domains
+- Focus redirect for distracting sites
 
 The extension starts with `*.naver.com` in the responsive-width domain list. Add or remove hostname patterns one per line from the sidebar.
+The focus redirect sends matching sites to `https://www.keybr.com/`. It starts with `x.com`, `youtube.com`, and `news.ycombinator.com`; add or remove domains from the sidebar.
 
 ## Install
 
@@ -34,10 +36,15 @@ The context-menu override is enabled by default. It runs on normal webpages and 
 
 For matching domains, browser-toolbox measures a fixed page layout and scales it down to fit the available page width. It is useful for old fixed-width websites; it does not reconstruct their internal responsive layout.
 
+### Focus redirect
+
+The focus redirect applies to top-level page visits only. A domain such as `youtube.com` matches `youtube.com` and subdomains such as `www.youtube.com` or `m.youtube.com`, then redirects to `https://www.keybr.com/` before the blocked page loads.
+
 ## Project layout
 
 ```text
 assets/icons/             Extension icons
+src/features/             Modular browser-toolbox features
 src/background.js         Tab-scoped user-agent rules and defaults
 src/content/              Page-level utilities
 src/shared/               Shared profile definitions

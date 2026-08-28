@@ -63,6 +63,31 @@
           </label>
         </section>
 
+        <section class="focus-redirect" aria-labelledby="focus-redirect-title">
+          <h2 id="focus-redirect-title">Focus redirect</h2>
+          <label class="toggle-row" for="focus-redirect-toggle">
+            <span>
+              <strong>Redirect distracting sites</strong>
+              <small>Sends matching visits to Keybr.</small>
+            </span>
+            <input id="focus-redirect-toggle" type="checkbox" />
+          </label>
+          <label class="domains-label" for="focus-redirect-domains">Domains (one per line)</label>
+          <textarea
+            id="focus-redirect-domains"
+            rows="4"
+            spellcheck="false"
+            placeholder="youtube.com"
+          ></textarea>
+          <p class="scope-note">Each domain also matches its subdomains.</p>
+          <div class="settings-actions">
+            <button id="save-focus-redirect-domains" class="button button--secondary" type="button">
+              Save domains
+            </button>
+            <span id="focus-redirect-feedback" class="feedback" role="status" aria-live="polite"></span>
+          </div>
+        </section>
+
         <section class="responsive-width" aria-labelledby="responsive-width-title">
           <h2 id="responsive-width-title">Responsive width</h2>
           <label class="toggle-row" for="responsive-width-toggle">
@@ -79,7 +104,7 @@
             spellcheck="false"
             placeholder="*.naver.com"
           ></textarea>
-          <div class="responsive-actions">
+          <div class="settings-actions">
             <button id="save-responsive-domains" class="button button--secondary" type="button">
               Save domains
             </button>

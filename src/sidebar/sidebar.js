@@ -1,4 +1,10 @@
 import {
+  DEFAULT_FOCUS_REDIRECT_DOMAINS,
+  FOCUS_REDIRECT_DOMAINS_KEY,
+  FOCUS_REDIRECT_ENABLED_KEY,
+  normalizeRedirectDomains
+} from "../shared/focus-redirect.js";
+import {
   DEFAULT_PROFILE_ID,
   USER_AGENT_PROFILES,
   getProfile
@@ -18,6 +24,10 @@ const elements = {
   responsiveDomains: document.querySelector("#responsive-domains"),
   saveResponsiveDomains: document.querySelector("#save-responsive-domains"),
   responsiveFeedback: document.querySelector("#responsive-feedback"),
+  focusRedirectToggle: document.querySelector("#focus-redirect-toggle"),
+  focusRedirectDomains: document.querySelector("#focus-redirect-domains"),
+  saveFocusRedirectDomains: document.querySelector("#save-focus-redirect-domains"),
+  focusRedirectFeedback: document.querySelector("#focus-redirect-feedback"),
   extensionsPageButton: document.querySelector("#extensions-page-button")
 };
 
@@ -158,8 +168,19 @@ async function loadResponsiveWidthSetting() {
     : "*.naver.com";
 }
 
-function getDomainPatterns() {
-  return elements.responsiveDomains.value
+async function loadFocusRedirectSetting() {
+  const stored = await chrome.storage.local.get([
+    FOCUS_REDIRECT_ENABLED_KEY,
+    FOCUS_REDIRECT_DOMAINS_KEY
+  ]);
+  elements.focusRedirectToggle.checked = stored[FOCUS_REDIRECT_ENABLED_KEY] !== false;
+  elements.focusRedirectDomains.value = Array.isArray(stored[FOCUS_REDIRECT_DOMAINS_KEY])
+    ? stored[FOCUS_REDIRECT_DOMAINS_KEY].join("\n")
+    : DEFAULT_FOCUS_REDIRECT_DOMAINS.join("\n");
+}
+
+function getLines(textarea) {
+  return textarea.value
     .split("\n")
     .map((pattern) => pattern.trim())
     .filter(Boolean);
@@ -168,9 +189,24 @@ function getDomainPatterns() {
 async function saveResponsiveWidthSettings() {
   await chrome.storage.local.set({
     responsiveWidthEnabled: elements.responsiveWidthToggle.checked,
-    responsiveWidthDomains: getDomainPatterns()
+    responsiveWidthDomains: getLines(elements.responsiveDomains)
   });
   elements.responsiveFeedback.textContent = "Saved. Reload matching tabs.";
+}
+
+async function saveFocusRedirectSettings() {
+  const domains = normalizeRedirectDomains(getLines(elements.focusRedirectDomains));
+
+  await chrome.storage.local.set({
+    [FOCUS_REDIRECT_ENABLED_KEY]: elements.focusRedirectToggle.checked,
+    [FOCUS_REDIRECT_DOMAINS_KEY]: domains
+  });
+  await sendMessage({ type: "APPLY_FOCUS_REDIRECT_SETTINGS" });
+
+  elements.focusRedirectDomains.value = domains.join("\n");
+  elements.focusRedirectFeedback.textContent = elements.focusRedirectToggle.checked
+    ? "Saved. Matching visits redirect to Keybr."
+    : "Saved. Redirect is off.";
 }
 
 async function applySelectedProfile() {
@@ -240,6 +276,16 @@ elements.saveResponsiveDomains.addEventListener("click", () => {
     elements.responsiveFeedback.textContent = error.message;
   });
 });
+elements.focusRedirectToggle.addEventListener("change", () => {
+  saveFocusRedirectSettings().catch((error) => {
+    elements.focusRedirectFeedback.textContent = error.message;
+  });
+});
+elements.saveFocusRedirectDomains.addEventListener("click", () => {
+  saveFocusRedirectSettings().catch((error) => {
+    elements.focusRedirectFeedback.textContent = error.message;
+  });
+});
 elements.extensionsPageButton.addEventListener("click", () => {
   chrome.tabs.create({ url: `chrome://extensions/?id=${chrome.runtime.id}` });
 });
@@ -272,4 +318,7 @@ refreshCurrentTab().catch((error) => showFeedback(error.message, true));
 loadRightClickSetting().catch((error) => showFeedback(error.message, true));
 loadResponsiveWidthSetting().catch((error) => {
   elements.responsiveFeedback.textContent = error.message;
+});
+loadFocusRedirectSetting().catch((error) => {
+  elements.focusRedirectFeedback.textContent = error.message;
 });
