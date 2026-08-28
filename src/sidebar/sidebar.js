@@ -5,6 +5,12 @@ import {
   normalizeRedirectDomains
 } from "../shared/focus-redirect.js";
 import {
+  DEFAULT_RESPONSIVE_WIDTH_DOMAINS,
+  RESPONSIVE_WIDTH_DOMAINS_KEY,
+  RESPONSIVE_WIDTH_ENABLED_KEY
+} from "../shared/responsive-width.js";
+import { RIGHT_CLICK_ENABLED_KEY } from "../shared/right-click.js";
+import {
   DEFAULT_PROFILE_ID,
   USER_AGENT_PROFILES,
   getProfile
@@ -153,19 +159,19 @@ async function refreshTabById(tabId) {
 }
 
 async function loadRightClickSetting() {
-  const stored = await chrome.storage.local.get("allowRightClick");
-  elements.rightClickToggle.checked = stored.allowRightClick !== false;
+  const stored = await chrome.storage.local.get(RIGHT_CLICK_ENABLED_KEY);
+  elements.rightClickToggle.checked = stored[RIGHT_CLICK_ENABLED_KEY] !== false;
 }
 
 async function loadResponsiveWidthSetting() {
   const stored = await chrome.storage.local.get([
-    "responsiveWidthEnabled",
-    "responsiveWidthDomains"
+    RESPONSIVE_WIDTH_ENABLED_KEY,
+    RESPONSIVE_WIDTH_DOMAINS_KEY
   ]);
-  elements.responsiveWidthToggle.checked = stored.responsiveWidthEnabled !== false;
-  elements.responsiveDomains.value = Array.isArray(stored.responsiveWidthDomains)
-    ? stored.responsiveWidthDomains.join("\n")
-    : "*.naver.com";
+  elements.responsiveWidthToggle.checked = stored[RESPONSIVE_WIDTH_ENABLED_KEY] !== false;
+  elements.responsiveDomains.value = Array.isArray(stored[RESPONSIVE_WIDTH_DOMAINS_KEY])
+    ? stored[RESPONSIVE_WIDTH_DOMAINS_KEY].join("\n")
+    : DEFAULT_RESPONSIVE_WIDTH_DOMAINS.join("\n");
 }
 
 async function loadFocusRedirectSetting() {
@@ -188,8 +194,8 @@ function getLines(textarea) {
 
 async function saveResponsiveWidthSettings() {
   await chrome.storage.local.set({
-    responsiveWidthEnabled: elements.responsiveWidthToggle.checked,
-    responsiveWidthDomains: getLines(elements.responsiveDomains)
+    [RESPONSIVE_WIDTH_ENABLED_KEY]: elements.responsiveWidthToggle.checked,
+    [RESPONSIVE_WIDTH_DOMAINS_KEY]: getLines(elements.responsiveDomains)
   });
   elements.responsiveFeedback.textContent = "Saved. Reload matching tabs.";
 }
@@ -264,7 +270,9 @@ elements.profileSelect.addEventListener("change", () => {
 elements.applyButton.addEventListener("click", applySelectedProfile);
 elements.resetButton.addEventListener("click", resetProfile);
 elements.rightClickToggle.addEventListener("change", () => {
-  chrome.storage.local.set({ allowRightClick: elements.rightClickToggle.checked });
+  chrome.storage.local.set({
+    [RIGHT_CLICK_ENABLED_KEY]: elements.rightClickToggle.checked
+  });
 });
 elements.responsiveWidthToggle.addEventListener("change", () => {
   saveResponsiveWidthSettings().catch((error) => {

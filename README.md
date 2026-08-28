@@ -45,9 +45,8 @@ The focus redirect applies to top-level page visits only. A domain such as `yout
 ```text
 assets/icons/             Extension icons
 src/features/             Modular browser-toolbox features
-src/background.js         Tab-scoped user-agent rules and defaults
-src/content/              Page-level utilities
-src/shared/               Shared profile definitions
+src/background.js         Extension lifecycle and feature message routing
+src/shared/               Shared profile and feature setting definitions
 src/sidebar/              Side-panel UI
 manifest.json             Manifest V3 entry point
 ```

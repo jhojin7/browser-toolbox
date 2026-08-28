@@ -1,0 +1,8 @@
+export const RESPONSIVE_WIDTH_ENABLED_KEY = "responsiveWidthEnabled";
+export const RESPONSIVE_WIDTH_DOMAINS_KEY = "responsiveWidthDomains";
+export const DEFAULT_RESPONSIVE_WIDTH_DOMAINS = ["*.naver.com"];
+
+export const RESPONSIVE_WIDTH_DEFAULTS = {
+  [RESPONSIVE_WIDTH_ENABLED_KEY]: true,
+  [RESPONSIVE_WIDTH_DOMAINS_KEY]: DEFAULT_RESPONSIVE_WIDTH_DOMAINS
+};
