@@ -6,6 +6,7 @@
   "minimum_chrome_version": "114",
   "permissions": [
     "declarativeNetRequest",
+    "scripting",
     "sidePanel",
     "storage",
     "tabs"
@@ -32,6 +33,12 @@
       ],
       "run_at": "document_start",
       "all_frames": true
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/features/text-viewer.js"],
+      "run_at": "document_start",
+      "all_frames": false
     }
   ],
   "action": {

@@ -8,6 +8,7 @@ No account, backend, analytics, or remote service.
 
 - **User agent**: apply a per-tab `User-Agent` header profile, then reload the tab.
 - **Right click**: keep Chrome's context menu available on sites that try to suppress it.
+- **Text viewer**: replace Chrome's plain-text page with a readable viewer. Markdown files render as GFM; other text stays raw.
 - **Responsive width**: scale fixed-width pages down for selected domains. Defaults to `*.naver.com`.
 - **Focus redirect**: redirect distracting domains to `https://www.keybr.com/`. Defaults to `x.com`, `youtube.com`, and `news.ycombinator.com`.
 
@@ -26,6 +27,8 @@ After source changes, reload the extension from `chrome://extensions`.
 - Settings are stored in Chrome extension storage.
 - User-agent changes affect only the active tab's top-level page request. They do not change Client Hints, cookies, JavaScript values, device metrics, subresources, or viewport size.
 - Right-click and responsive-width features run on normal webpages and frames. Chrome extension scripts cannot run on internal pages such as `chrome://`.
+- Local text files require **Allow access to file URLs** on the extension's Chrome details page.
+- Markdown rendering uses bundled copies of Marked, DOMPurify, and highlight.js; it does not load executable code from a CDN.
 - Responsive-width domain patterns are edited one per line in the side panel. Matching tabs may need a reload.
 - Focus redirect applies to top-level page visits. A domain like `youtube.com` also matches subdomains like `www.youtube.com`.
 
@@ -37,5 +40,6 @@ src/background.js  Extension lifecycle and message routing
 src/features/      One module per browser-toolbox feature
 src/shared/        Shared profiles, defaults, and setting keys
 src/sidebar/       Side-panel UI
+vendor/            Bundled Markdown rendering libraries and licenses
 manifest.json      Manifest V3 entry point
 ```
