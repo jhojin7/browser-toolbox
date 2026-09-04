@@ -10,6 +10,7 @@ import {
   RESPONSIVE_WIDTH_ENABLED_KEY
 } from "../shared/responsive-width.js";
 import { RIGHT_CLICK_ENABLED_KEY } from "../shared/right-click.js";
+import { TEXT_VIEWER_ENABLED_KEY } from "../shared/text-viewer.js";
 import {
   DEFAULT_PROFILE_ID,
   USER_AGENT_PROFILES,
@@ -26,6 +27,7 @@ const elements = {
   feedback: document.querySelector("#feedback"),
   siteName: document.querySelector("#site-name"),
   rightClickToggle: document.querySelector("#right-click-toggle"),
+  textViewerToggle: document.querySelector("#text-viewer-toggle"),
   responsiveWidthToggle: document.querySelector("#responsive-width-toggle"),
   responsiveDomains: document.querySelector("#responsive-domains"),
   saveResponsiveDomains: document.querySelector("#save-responsive-domains"),
@@ -163,6 +165,11 @@ async function loadRightClickSetting() {
   elements.rightClickToggle.checked = stored[RIGHT_CLICK_ENABLED_KEY] !== false;
 }
 
+async function loadTextViewerSetting() {
+  const stored = await chrome.storage.local.get(TEXT_VIEWER_ENABLED_KEY);
+  elements.textViewerToggle.checked = stored[TEXT_VIEWER_ENABLED_KEY] !== false;
+}
+
 async function loadResponsiveWidthSetting() {
   const stored = await chrome.storage.local.get([
     RESPONSIVE_WIDTH_ENABLED_KEY,
@@ -274,6 +281,11 @@ elements.rightClickToggle.addEventListener("change", () => {
     [RIGHT_CLICK_ENABLED_KEY]: elements.rightClickToggle.checked
   });
 });
+elements.textViewerToggle.addEventListener("change", () => {
+  chrome.storage.local.set({
+    [TEXT_VIEWER_ENABLED_KEY]: elements.textViewerToggle.checked
+  });
+});
 elements.responsiveWidthToggle.addEventListener("change", () => {
   saveResponsiveWidthSettings().catch((error) => {
     elements.responsiveFeedback.textContent = error.message;
@@ -324,6 +336,7 @@ populateProfiles();
 renderSelectedProfile();
 refreshCurrentTab().catch((error) => showFeedback(error.message, true));
 loadRightClickSetting().catch((error) => showFeedback(error.message, true));
+loadTextViewerSetting().catch((error) => showFeedback(error.message, true));
 loadResponsiveWidthSetting().catch((error) => {
   elements.responsiveFeedback.textContent = error.message;
 });

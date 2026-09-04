@@ -104,7 +104,7 @@ select {
 .details summary { cursor: pointer; }
 .details code { display: block; margin-top: 8px; overflow-wrap: anywhere; font-size: 10px; line-height: 1.5; }
 
-.right-click h2, .focus-redirect h2 { margin-bottom: 12px; }
+.right-click h2, .text-viewer h2, .focus-redirect h2 { margin-bottom: 12px; }
 
 .toggle-row {
   display: flex;

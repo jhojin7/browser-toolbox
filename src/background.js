@@ -7,14 +7,17 @@ import {
   handleUserAgentMessage,
   installUserAgentFeature
 } from "./features/user-agent.js";
+import { handleTextViewerMessage } from "./features/text-viewer-assets.js";
 import { FOCUS_REDIRECT_DEFAULTS } from "./shared/focus-redirect.js";
 import { RESPONSIVE_WIDTH_DEFAULTS } from "./shared/responsive-width.js";
 import { RIGHT_CLICK_DEFAULTS } from "./shared/right-click.js";
+import { TEXT_VIEWER_DEFAULTS } from "./shared/text-viewer.js";
 
 const DEFAULT_SETTINGS = {
   ...RIGHT_CLICK_DEFAULTS,
   ...RESPONSIVE_WIDTH_DEFAULTS,
-  ...FOCUS_REDIRECT_DEFAULTS
+  ...FOCUS_REDIRECT_DEFAULTS,
+  ...TEXT_VIEWER_DEFAULTS
 };
 
 chrome.sidePanel
@@ -72,10 +75,13 @@ async function initializeSettings(reason) {
   await applyFocusRedirectRules();
 }
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const handleMessage = async () => {
     const userAgentResponse = await handleUserAgentMessage(message);
     if (userAgentResponse) return userAgentResponse;
+
+    const textViewerResponse = await handleTextViewerMessage(message, sender);
+    if (textViewerResponse) return textViewerResponse;
 
     switch (message.type) {
       case "APPLY_FOCUS_REDIRECT_SETTINGS":
