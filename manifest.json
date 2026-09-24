@@ -26,6 +26,11 @@
   },
   "content_scripts": [
     {
+      "matches": ["https://keep.google.com/*"],
+      "js": ["src/features/keep-note-viewport.js"],
+      "run_at": "document_start"
+    },
+    {
       "matches": ["<all_urls>"],
       "js": [
         "src/features/right-click.js",

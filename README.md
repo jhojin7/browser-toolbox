@@ -11,6 +11,7 @@ No account, backend, analytics, or remote service.
 - **Text viewer**: replace Chrome's plain-text page with a readable viewer. Markdown files render as GFM; other text stays raw.
 - **Responsive width**: scale fixed-width pages down for selected domains. Defaults to `*.naver.com`.
 - **Focus redirect**: redirect distracting domains to `https://www.keybr.com/`. Defaults to `x.com`, `youtube.com`, and `news.ycombinator.com`.
+- **Keep note viewport**: expand open Google Keep notes to the viewport with a 10 px edge gap.
 
 ## Install
 
